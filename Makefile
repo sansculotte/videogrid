@@ -11,7 +11,7 @@ FFMPEG_LIBS=libavcodec   \
             libavutil    \
             libswscale   \
  
-CFLAGS += -Wall -g -O2
+CFLAGS += -Wall -g -O2 -Wno-write-strings
 CFLAGS := $(shell pkg-config --cflags $(FFMPEG_LIBS)) $(CFLAGS)
 LDLIBS := $(shell pkg-config --libs $(FFMPEG_LIBS)) $(LDLIBS)
 
