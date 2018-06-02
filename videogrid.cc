@@ -30,49 +30,36 @@ extern "C"
     #include <math.h>
 
     /*
-     * incloure les definicions de variables i prototipus de dades i de funcions de puredata
+     * include puredata header files
     */
     #include "m_pd.h"
     /*
-     * incloure estructures de dades i capceleres de funcions gàfiques bàsiques de pd
+     * include purdata GUI datastructires and function definitions
     */
     #include "g_canvas.h"
     #include "s_stuff.h"
     /*
-     * incloure estructures de dades i capceleres de funcions per traballar amb threads
+     * include POSIX threading datastructures and function definitions
     */
     #include "pthread.h"
 
-    /* some linux distros need this to compile ffmpeg correctly as cpp */
-/*    #define __STDC_CONSTANT_MACROS 1 */
-
-/*    #ifdef __cplusplus
-    #define __STDC_CONSTANT_MACROS
-    #ifdef _STDINT_H
-    #undef _STDINT_H
-    #endif
-    # include <stdint.h>
-    #endif
-*/
-
     /* ffmpeg includes */
-
     #include <libavcodec/avcodec.h>
     #include <libavformat/avformat.h>
     #include <libavutil/avutil.h>
     #include <libswscale/swscale.h>
 
 
-    /* &&&&&&&&&&&&&&&&&&&&&&&&&&&&& VIDEOGRID &&&&&&&&&&&&&&&&&&&&&&&&&&&&& */
+    /* ----------------------------- VIDEOGRID ----------------------------- */
 
     /* definició del gruix en pixels del marc del tauler */
     #define GRUIX 2
 
-    /* nombre de caracters per el nom del path del fitxer */
+    /* maximum number of characters in filenames */
     #define BYTESNOMFITXER 512
 
     /* 8bits clamp rgb values */
-    #define CLAMP8(x) (((x)<0) ? 0 : ((x>255)? 255 : (x)))
+    #define CLAMP8(x) (((x)<0) ? 0 : ((x>255) ? 255 : (x)))
 
     #define BYTESNOMFITXERIMATGE 512
     #define BYTESTIPUSFROMAT 4
@@ -374,7 +361,9 @@ extern "C"
             cua->davanter=nou;
         }
         else
+        {
             cua->final->seguent=nou;
+        }
         cua->final=nou;
     }
 
@@ -391,7 +380,6 @@ extern "C"
         }
         else
         {
-            /* printf("Cua buida\a\n"); */
             return 0;
         }
     }
@@ -453,21 +441,21 @@ extern "C"
 
     typedef struct _videogrid {
         t_object  x_obj;
-        /* declaració de la sortida de l'objecte */
+        /* declare object outlets */
         t_outlet *x_sortida;
-        /* llista d'objectes gràfics */
+        /* list graphic objects */
         t_glist *x_glist;
-        /* nombre de files */
+        /* number of files */
         int x_num_fil;
-        /* nombre de columnes */
+        /* number of columns */
         int x_num_col;
-        /* width del thumbnail  */
+        /* width of thumbnail  */
         int x_w_cell;
-        /* height del thumbnail */
+        /* height of thumbnail */
         int x_h_cell;
         /* posició de la última imatge en el tauler */
         int x_ultima_img;
-        /* path del directori actual */
+        /* current directory path */
         path x_dir_actual;
         /* path del directori a canviar */
         path x_dir_canvi;
@@ -475,15 +463,15 @@ extern "C"
         int x_dir_pos;
         /* apuntador al primer element posicionat al tauler */
         Node *x_tauler_primer;
-        /* cua d'imatges */
+        /* queue */
         Cua x_cua;
-        /* nom de l'objecte */
+        /* name of the object */
         t_symbol *x_name;
-        /* color de fons */
+        /* front color */
         t_symbol *x_color_fons;
         /* color del marge */
         t_symbol *x_color_marc;
-        /* mutex per evitar concurrencia sobre la cua al accedir diferents threads*/
+        /* mutex per evitar concurrencia sobre la cua al accedir diferents threads */
         pthread_mutex_t x_lock;
         /* v 0.2 -- posicó de la cel·la seleccionada */
         int x_pos_selected;
