@@ -121,9 +121,9 @@ extern "C"
         int x,y,realx;
 
         // Write pixel data
-        for(y=0; y<H; y=y++) {
-            for(x=0; x<W; x=x++) {
-                realx = ((x*k)+(3-((int)(x*k)%3)))*3;
+        for(y=0; y<H; y++) {
+            for(x=0; x<W; x++) {
+                realx = ((x*k) + (3 - ((int)(x*k) % 3))) * 3;
                 fwrite((pFrame->data[0]+(int)(y*l)*pFrame->linesize[0])+realx, 1, 3, pFile);
             }
         }
@@ -134,7 +134,7 @@ extern "C"
 
     int convertir_img_ff(pathimage pathFitxer, tipus_format f, int W, int H, int posi)
     {
-        AVFormatContext *pFormatCtx;
+        AVFormatContext *pFormatCtx = avformat_alloc_context();
         int             i, videoStream;
         AVCodecContext  *pCodecCtx;
         AVCodec         *pCodec;
