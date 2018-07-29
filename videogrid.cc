@@ -178,10 +178,10 @@ extern "C"
         //    pCodecCtx->frame_rate_base=1000;
 
         // Allocate video frame
-        pFrame = avcodec_alloc_frame();
+        pFrame = av_frame_alloc();
 
         // Allocate an AVFrame structure
-        pFrameRGB = avcodec_alloc_frame();
+        pFrameRGB = av_frame_alloc();
         if(pFrameRGB == NULL)
             return -1;
 
