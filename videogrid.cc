@@ -64,7 +64,7 @@ extern "C"
     #define BYTESNOMFITXERIMATGE 512
     #define BYTESTIPUSFROMAT 4
 
-    #define FORMAT_MINIATURA "ppm"
+    #define THUMBNAIL_FORMAT "ppm"
     #define PATH_TEMPORAL "/tmp/vigrid_"
     #define BYTES_NUM_TEMP 4
 
@@ -90,11 +90,11 @@ extern "C"
         sprintf(nNstr, "%d", nN);
         strcat(ig_path, nNstr);
         strcat(ig_path, ".");
-        strcat(ig_path, FORMAT_MINIATURA);
+        strcat(ig_path, THUMBNAIL_FORMAT);
+
+        sprintf(szFilename, "%s", ig_path);
 
         // Open file
-        sprintf(szFilename, ig_path);
-
         pFile=fopen(szFilename, "wb");
         if(pFile==NULL)
             return;
@@ -102,8 +102,6 @@ extern "C"
         // Write header
         fprintf(pFile, "P6\n%d %d\n255\n", W, H);
 
-        int w = width;
-        int h = height;
         float k = (width/W);
         float l = (height/H);
         int x,y,realx;
@@ -123,7 +121,8 @@ extern "C"
     int convertir_img_ff(pathimage pathFitxer, tipus_format f, int W, int H, int posi)
     {
         AVFormatContext *pFormatCtx = avformat_alloc_context();
-        int             i, videoStream;
+        unsigned int    i;
+        int             videoStream;
         AVCodecContext  *pCodecCtx;
         AVCodec         *pCodec;
         AVFrame         *pFrame;
@@ -509,7 +508,6 @@ extern "C"
 
     /* elimina les imatges temporals */
     void eliminar_imatges_temporals(int maxim){
-        FILE *fitxer;
         path path_total;
         int contador = 0;
         char contador_str[BYTES_NUM_TEMP];
@@ -518,7 +516,7 @@ extern "C"
             sprintf(contador_str,"%d", contador);
             strcat(path_total,contador_str);
             strcat(path_total,".");
-            strcat(path_total,FORMAT_MINIATURA);
+            strcat(path_total,THUMBNAIL_FORMAT);
             /* elimina el fitxer si no hi ha cap problema */
             if(unlink(path_total)){
                 /* post("Imatge temporal %s eliminada\n",path_total); */
@@ -563,7 +561,7 @@ extern "C"
         path  ig_path = PATH_TEMPORAL;
 
         /* si hi ha tants nodes a la cua com el maxim */
-        if((numNodes(&x->x_cua)) >=  maxim){
+        if((numNodes(&x->x_cua)) >= maxim){
             /* desencua */
             int extret;
             extret = desencuar(&x->x_cua);
@@ -580,7 +578,7 @@ extern "C"
         /* FFMPEG per les conversions */
         int fferror=0;
         int nN = x->x_ultima_img;
-        fferror = convertir_img_ff(entrada, FORMAT_MINIATURA, x->x_w_cell, x->x_h_cell, nN);
+        fferror = convertir_img_ff(entrada, THUMBNAIL_FORMAT, x->x_w_cell, x->x_h_cell, nN);
         /* post ("%d",fferror); */
         if (fferror>=0) {
             /* encua el nou node */
@@ -596,7 +594,7 @@ extern "C"
             sprintf(nNstr, "%d", nN);
             strcat(ig_path,nNstr);
             strcat(ig_path,".");
-            strcat(ig_path,FORMAT_MINIATURA);
+            strcat(ig_path,THUMBNAIL_FORMAT);
 
             sys_vgui("image create photo img%x%d -file %s\n",x,nN,ig_path);
             sys_vgui(".x%lx.c create image %d %d -image img%x%d -tags %xS%d\n",
@@ -659,9 +657,9 @@ extern "C"
                     sprintf(nNstr, "%d", nN);
                     strcat(ig_path,nNstr);
                     strcat(ig_path,".");
-                    strcat(ig_path,FORMAT_MINIATURA);
+                    strcat(ig_path,THUMBNAIL_FORMAT);
                     /* post("reestablint la imatge %s", actual->pathFitxer); */
-                    convertir_img_ff(actual->pathFitxer,FORMAT_MINIATURA, x->x_w_cell, x->x_h_cell, nN);
+                    convertir_img_ff(actual->pathFitxer,THUMBNAIL_FORMAT, x->x_w_cell, x->x_h_cell, nN);
                     sys_vgui("image create photo img%x%d -file %s\n",x,nN,ig_path);
                     sys_vgui(".x%lx.c create image %d %d -image img%x%d -tags %xS%d\n",
                              glist_getcanvas(x->x_glist),text_xpix(&x->x_obj, x->x_glist) + getX(x,nN) + (x->x_w_cell/2), text_ypix(&x->x_obj, x->x_glist) + getY(x,nN) + (x->x_h_cell/2),x,nN,x,nN);
@@ -755,7 +753,7 @@ extern "C"
             sprintf(contador_str,"%d", contador);
             strcat(path_total,contador_str);
             strcat(path_total,".");
-            strcat(path_total,FORMAT_MINIATURA);
+            strcat(path_total,THUMBNAIL_FORMAT);
             if(unlink(path_total)){
                 /* post("Imatge temporal %s eliminada\n",path_total); */
             }
