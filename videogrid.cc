@@ -417,7 +417,7 @@ extern "C"
         {
             Node *actual;
             actual=cua->davanter;
-            post("THUMBS INSIDE\n[");
+            post("thumbs inside\n[");
             do{
                 post("#%s#",actual->pathFitxer);
                 actual = actual->seguent;
@@ -425,7 +425,7 @@ extern "C"
             post("]\n");
         }
         else
-            post("EMPTY: NO THUMBS INSIDE\n");
+            post("empty: no thumbs inside\n");
     }
 
     /* ----------------------------------- videogrid gui-videogrid ----------------------------------- */
@@ -1529,7 +1529,7 @@ extern "C"
             x->x_color_fons = argv[3].a_w.w_symbol;
             x->x_color_marc = argv[4].a_w.w_symbol;
             x->x_color_grasp = gensym("#F1882B");
-            x->x_format_list = gensym("mov:mpg");
+            x->x_format_list = gensym("mov:mpg:avi");
             x->x_w_cell = 60;
             x->x_h_cell = 40;
         break;
@@ -1540,7 +1540,7 @@ extern "C"
             x->x_color_fons = argv[3].a_w.w_symbol;
             x->x_color_marc = argv[4].a_w.w_symbol;
             x->x_color_grasp = argv[5].a_w.w_symbol;
-            x->x_format_list = gensym("mov:mpg");
+            x->x_format_list = gensym("mov:mpg:avi");
             x->x_w_cell = 60;
             x->x_h_cell = 40;
         break;
@@ -1576,7 +1576,7 @@ extern "C"
             x->x_color_fons = argv[3].a_w.w_symbol;
             x->x_color_marc = argv[4].a_w.w_symbol;
             x->x_color_grasp = argv[5].a_w.w_symbol;
-            x->x_format_list = gensym("mov:mpg");
+            x->x_format_list = gensym("mov:mpg:avi");
             x->x_w_cell = 60;
             x->x_h_cell = 40;
             /*
