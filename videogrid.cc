@@ -220,22 +220,22 @@ extern "C"
                 //    pCodecCtx->height);
                 img_convert_ctx = sws_getContext(
                     pCodecCtx->width,
-                     pCodecCtx->height,
-                     pCodecCtx->pix_fmt,
-                     pCodecCtx->width,
-                     pCodecCtx->height,
-                     AV_PIX_FMT_RGB24,
-                     sws_flags,
-                     NULL, NULL, NULL
+                    pCodecCtx->height,
+                    pCodecCtx->pix_fmt,
+                    pCodecCtx->width,
+                    pCodecCtx->height,
+                    AV_PIX_FMT_RGB24,
+                    sws_flags,
+                    NULL, NULL, NULL
                 );
                 sws_scale(
                     img_convert_ctx,
-                     pFrame->data,
-                     pFrame->linesize,
-                     0,
-                     pCodecCtx->height,
-                     pFrameRGB->data,
-                     pFrameRGB->linesize
+                    pFrame->data,
+                    pFrame->linesize,
+                    0,
+                    pCodecCtx->height,
+                    pFrameRGB->data,
+                    pFrameRGB->linesize
                 );
                 sws_freeContext(img_convert_ctx);
 
@@ -274,8 +274,8 @@ extern "C"
                 );
 
                 sws_scale(img_convert_ctx, pFrame->data, pFrame->linesize,
-                            0, pCodecCtx->height,
-                            pFrameRGB->data, pFrameRGB->linesize);
+                          0, pCodecCtx->height,
+                          pFrameRGB->data, pFrameRGB->linesize);
                 sws_freeContext(img_convert_ctx);
 
                 // Save the frame to disk
@@ -502,7 +502,7 @@ extern "C"
     {
         /* post("Ungrasp selected thumb %d", x->x_pos_selected); */
         if(x->x_pos_selected > -1) {
-            sys_vgui(".x%x.c delete %xGRASP\n", glist_getcanvas(x->x_glist), x);
+            sys_vgui(".x%lx.c delete %xGRASP\n", glist_getcanvas(x->x_glist), x);
             x->x_pos_selected = -1;
         }
     }
@@ -574,7 +574,7 @@ extern "C"
             else {
                 pos = x->x_ultima_img + 1;
             }
-            sys_vgui(".x%x.c delete %xS%d\n", glist_getcanvas(x->x_glist), x, x->x_ultima_img);
+            sys_vgui(".x%lx.c delete %xS%d\n", glist_getcanvas(x->x_glist), x, x->x_ultima_img);
         }
 
         /* FFMPEG per les conversions */
@@ -599,7 +599,7 @@ extern "C"
             strcat(ig_path,FORMAT_MINIATURA);
 
             sys_vgui("image create photo img%x%d -file %s\n",x,nN,ig_path);
-            sys_vgui(".x%x.c create image %d %d -image img%x%d -tags %xS%d\n",
+            sys_vgui(".x%lx.c create image %d %d -image img%x%d -tags %xS%d\n",
                 glist_getcanvas(x->x_glist),
                 text_xpix(&x->x_obj, x->x_glist) + getX(x,nN) + (x->x_w_cell/2),
                 text_ypix(&x->x_obj, x->x_glist) + getY(x,nN) + (x->x_h_cell/2),
@@ -613,14 +613,15 @@ extern "C"
     /* v 0.2 -- mètode de la classe que marca la cel·la seleccionada */
     static void videogrid_grasp_selected(t_videogrid *x, int pos)
     {
+        t_canvas *canvas = glist_getcanvas(x->x_glist);
         /*printf("Grasp selected thumb %d", pos);*/
         if(pos != x->x_pos_selected) {
             videogrid_ungrasp_selected(x);
             /* post("Grasp selected thumb %d", pos); */
             x->x_pos_selected = pos;
             /* nem per aqui ---- */
-            sys_vgui(".x%x.c create rectangle %d %d %d %d -fill {} -tags %xGRASP -outline %s -width %d\n",
-                    glist_getcanvas(x->x_glist),
+            sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill {} -tags %xGRASP -outline %s -width %d\n",
+                    canvas,
                     text_xpix(&x->x_obj, x->x_glist) + getX(x,x->x_pos_selected), text_ypix(&x->x_obj, x->x_glist) + getY(x,x->x_pos_selected),
                     text_xpix(&x->x_obj, x->x_glist) + getX(x,x->x_pos_selected) + x->x_w_cell, text_ypix(&x->x_obj, x->x_glist) + getY(x,x->x_pos_selected) + x->x_h_cell,
                     x,x->x_color_grasp->s_name, GRUIX + 1);
@@ -633,12 +634,13 @@ extern "C"
     /* dibuixa videogrid */
     void videogrid_drawme(t_videogrid *x, t_glist *glist, int firsttime)
     {
+        t_canvas *canvas = glist_getcanvas(x->x_glist);
         /* post("Entra a drawme amb firsttime: %d", firsttime); */
         if (firsttime) {
             char name[MAXPDSTRING];
             canvas_makefilename(glist_getcanvas(x->x_glist), x->x_name->s_name, name, MAXPDSTRING);
-            sys_vgui(".x%x.c create rectangle %d %d %d %d -fill %s -tags %xGRID -outline %s\n",
-                glist_getcanvas(glist),
+            sys_vgui(".x%lx.c create rectangle %d %d %d %d -fill %s -tags %xGRID -outline %s\n",
+                canvas,
                 text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),
                 text_xpix(&x->x_obj, glist) + (x->x_num_col * x->x_w_cell) + 1 + (x->x_num_col * GRUIX) + GRUIX, text_ypix(&x->x_obj, glist) + (x->x_num_fil * x->x_h_cell) + 1 + (x->x_num_fil * GRUIX) + GRUIX,
                 x->x_color_fons->s_name, x,x->x_color_marc->s_name);
@@ -661,7 +663,7 @@ extern "C"
                     /* post("reestablint la imatge %s", actual->pathFitxer); */
                     convertir_img_ff(actual->pathFitxer,FORMAT_MINIATURA, x->x_w_cell, x->x_h_cell, nN);
                     sys_vgui("image create photo img%x%d -file %s\n",x,nN,ig_path);
-                    sys_vgui(".x%x.c create image %d %d -image img%x%d -tags %xS%d\n",
+                    sys_vgui(".x%lx.c create image %d %d -image img%x%d -tags %xS%d\n",
                              glist_getcanvas(x->x_glist),text_xpix(&x->x_obj, x->x_glist) + getX(x,nN) + (x->x_w_cell/2), text_ypix(&x->x_obj, x->x_glist) + getY(x,nN) + (x->x_h_cell/2),x,nN,x,nN);
                     actual = actual->seguent;
                     nN++;
@@ -669,12 +671,12 @@ extern "C"
             }
         }
         else {
-            sys_vgui(".x%x.c coords %xGRID %d %d %d %d\n", glist_getcanvas(glist), x, text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),text_xpix(&x->x_obj, glist) + (x->x_num_col*x->x_w_cell) + 1 + (x->x_num_col * GRUIX) + GRUIX, text_ypix(&x->x_obj, glist) + (x->x_num_fil*x->x_h_cell) + 1 + (x->x_num_fil * GRUIX) + GRUIX);
+            sys_vgui(".x%lx.c coords %xGRID %d %d %d %d\n", glist_getcanvas(glist), x, text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),text_xpix(&x->x_obj, glist) + (x->x_num_col*x->x_w_cell) + 1 + (x->x_num_col * GRUIX) + GRUIX, text_ypix(&x->x_obj, glist) + (x->x_num_fil*x->x_h_cell) + 1 + (x->x_num_fil * GRUIX) + GRUIX);
             if(!cuaBuida(&x->x_cua))
             {
                 int contador = 0;
                 while(contador < numNodes(&x->x_cua)){
-                    sys_vgui(".x%x.c coords %xS%d \
+                    sys_vgui(".x%lx.c coords %xS%d \
                             %d %d\n",
                     glist_getcanvas(glist), x, contador,
                     text_xpix(&x->x_obj, x->x_glist) + getX(x,contador) + (x->x_w_cell/2), text_ypix(&x->x_obj, x->x_glist) + getY(x,contador) + (x->x_h_cell/2));
@@ -686,11 +688,11 @@ extern "C"
                 gfxstub_new(&x->x_obj.ob_pd, x, buf); */
             }
             if (x->x_pos_selected > -1){
-                sys_vgui(".x%x.c coords %xGRASP %d %d %d %d\n", glist_getcanvas(glist), x,
+                sys_vgui(".x%lx.c coords %xGRASP %d %d %d %d\n", glist_getcanvas(glist), x,
                 text_xpix(&x->x_obj, x->x_glist) + getX(x,x->x_pos_selected), text_ypix(&x->x_obj, x->x_glist) + getY(x,x->x_pos_selected),
                 text_xpix(&x->x_obj, x->x_glist) + getX(x,x->x_pos_selected) + x->x_w_cell, text_ypix(&x->x_obj, x->x_glist) + getY(x,x->x_pos_selected) + x->x_h_cell);
             }
-            sys_vgui(".x%x.c delete %xLINIA\n", glist_getcanvas(x->x_glist), x);
+            sys_vgui(".x%lx.c delete %xLINIA\n", glist_getcanvas(x->x_glist), x);
         }
         int xI = text_xpix(&x->x_obj, glist);
         int yI = text_ypix(&x->x_obj, glist);
@@ -700,20 +702,20 @@ extern "C"
         int xi = 0;
         while(vlines < x->x_num_col){
             xi = xI + getX(x,vlines) - GRUIX + 1;
-            sys_vgui(".x%x.c create line %d %d %d %d -fill %s -width %d -tag %xLINIA\n", glist_getcanvas(x->x_glist), xi, yI, xi, yF, x->x_color_marc->s_name,GRUIX,x);
+            sys_vgui(".x%lx.c create line %d %d %d %d -fill %s -width %d -tag %xLINIA\n", glist_getcanvas(x->x_glist), xi, yI, xi, yF, x->x_color_marc->s_name,GRUIX,x);
             vlines++;
         }
         xi = xi + x->x_w_cell + GRUIX;
-        sys_vgui(".x%x.c create line %d %d %d %d -fill %s -width %d -tag %xLINIA\n", glist_getcanvas(x->x_glist), xi, yI, xi, yF, x->x_color_marc->s_name,GRUIX,x);
+        sys_vgui(".x%lx.c create line %d %d %d %d -fill %s -width %d -tag %xLINIA\n", glist_getcanvas(x->x_glist), xi, yI, xi, yF, x->x_color_marc->s_name,GRUIX,x);
         int hlines = 0;
         int yi = 0;
         while(hlines < x->x_num_fil){
             yi = yI + ((x->x_h_cell + GRUIX) * hlines) + 2;
-            sys_vgui(".x%x.c create line %d %d %d %d -fill %s -width %d -tag %xLINIA\n", glist_getcanvas(x->x_glist), xI, yi, xF, yi, x->x_color_marc->s_name,GRUIX,x);
+            sys_vgui(".x%lx.c create line %d %d %d %d -fill %s -width %d -tag %xLINIA\n", glist_getcanvas(x->x_glist), xI, yi, xF, yi, x->x_color_marc->s_name,GRUIX,x);
             hlines++;
         }
         yi = yi + x->x_h_cell + GRUIX;
-        sys_vgui(".x%x.c create line %d %d %d %d -fill %s -width %d -tag %xLINIA\n", glist_getcanvas(x->x_glist), xI, yi, xF, yi, x->x_color_marc->s_name,GRUIX,x);
+        sys_vgui(".x%lx.c create line %d %d %d %d -fill %s -width %d -tag %xLINIA\n", glist_getcanvas(x->x_glist), xI, yi, xF, yi, x->x_color_marc->s_name,GRUIX,x);
     }
 
     static void videogrid_delete(t_gobj *z, t_glist *glist)
@@ -729,7 +731,7 @@ extern "C"
         t_videogrid *x = (t_videogrid *)z;
         x->x_obj.te_xpix += dx;
         x->x_obj.te_ypix += dy;
-        sys_vgui(".x%x.c coords %xGRID %d %d %d %d\n",
+        sys_vgui(".x%lx.c coords %xGRID %d %d %d %d\n",
                  glist_getcanvas(glist), x,
                  text_xpix(&x->x_obj, glist), text_ypix(&x->x_obj, glist),
                  text_xpix(&x->x_obj, glist) + (x->x_num_col*x->x_w_cell) + 1 + (x->x_num_col * GRUIX) + GRUIX, text_ypix(&x->x_obj, glist) + (x->x_num_fil*x->x_h_cell) + 1 + (x->x_num_fil * GRUIX) + GRUIX);
@@ -748,7 +750,7 @@ extern "C"
         int contador = 0;
         while(contador < numNodes(&x->x_cua)){
 
-            sys_vgui(".x%x.c delete %xS%d\n", glist_getcanvas(x->x_glist), x, contador);
+            sys_vgui(".x%lx.c delete %xS%d\n", glist_getcanvas(x->x_glist), x, contador);
             strcpy(path_total,PATH_TEMPORAL);
             sprintf(contador_str,"%d", contador);
             strcat(path_total,contador_str);
@@ -762,12 +764,12 @@ extern "C"
 
         /* elimina el grid v 0.2 -- excepte quan es fa un clear */
         if(toclear == 0){
-            sys_vgui(".x%x.c delete %xGRID\n", glist_getcanvas(glist), x);
-            sys_vgui(".x%x.c delete %xLINIA\n", glist_getcanvas(x->x_glist), x);
+            sys_vgui(".x%lx.c delete %xGRID\n", glist_getcanvas(glist), x);
+            sys_vgui(".x%lx.c delete %xLINIA\n", glist_getcanvas(x->x_glist), x);
         }
         /* v 0.2 -- elimina el marc de la casella seleccionada */
         if(x->x_pos_selected > -1){
-            sys_vgui(".x%x.c delete %xGRASP\n", glist_getcanvas(glist), x);
+            sys_vgui(".x%lx.c delete %xGRASP\n", glist_getcanvas(glist), x);
             x->x_pos_selected = -1;
         }
         eliminar_imatges_temporals(maxim);
@@ -789,11 +791,11 @@ extern "C"
         t_videogrid *x = (t_videogrid *)z;
         if (state) {
             /* post("Videogrid seleccionat"); */
-            sys_vgui(".x%x.c itemconfigure %xGRID -outline #0000FF\n", glist_getcanvas(glist), x);
+            sys_vgui(".x%lx.c itemconfigure %xGRID -outline #0000FF\n", glist_getcanvas(glist), x);
         }
         else {
             /* post("Videogrid deseleccionat"); */
-            sys_vgui(".x%x.c itemconfigure %xGRID -outline %s\n", glist_getcanvas(glist), x, x->x_color_marc->s_name);
+            sys_vgui(".x%lx.c itemconfigure %xGRID -outline %s\n", glist_getcanvas(glist), x, x->x_color_marc->s_name);
         }
     }
 
